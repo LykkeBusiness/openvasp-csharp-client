@@ -1,0 +1,22 @@
+name: publish to nuget
+
+on: [push]
+
+jobs:
+  publish:
+    name: list on nuget
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Build with test
+        run: dotnet test --configuration Release "src/OpenVASP.CSharpClient.sln"
+        env: 
+          WHISPER_RPC_URL: ${{secrets.WHISPER_RPC_URL}}
+          ETHEREUM_RPC_URL: ${{secrets.ETHEREUM_RPC_URL}}
+      - name: Publish NuGet
+        uses: rohith/publish-nuget@v2
+        with:
+          PROJECT_FILE_PATH: src/OpenVASP.CSharpClient/OpenVASP.CSharpClient.csproj
+          VERSION_REGEX: <Version>(.*)<\/Version>
+          PACKAGE_NAME: ${{secrets.NUGET_PACKAGE_NAME}}

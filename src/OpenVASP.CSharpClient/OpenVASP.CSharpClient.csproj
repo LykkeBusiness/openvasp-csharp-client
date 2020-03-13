@@ -2,6 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <PackageId>test</PackageId>
+    <Version>0.0.1-alpha.1</Version>
   </PropertyGroup>
 
   <ItemGroup>
