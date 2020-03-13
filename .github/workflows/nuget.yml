@@ -20,3 +20,4 @@ jobs:
           PROJECT_FILE_PATH: src/OpenVASP.CSharpClient/OpenVASP.CSharpClient.csproj
           VERSION_REGEX: <Version>(.*)<\/Version>
           PACKAGE_NAME: ${{secrets.NUGET_PACKAGE_NAME}}
+          NUGET_KEY: ${{secrets.NUGET_API_KEY}}
