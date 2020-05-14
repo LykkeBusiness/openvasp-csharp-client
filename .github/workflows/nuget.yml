@@ -1,9 +1,11 @@
 name: Publish On NuGet
 
 on:
-  release:
-    types:
-      - published
+  push:
+    branches:
+      - master
+    tags:
+      - '*' # Push version tags matching to *, i.e. v1.0.0, 20.15.10 
 
 jobs:
   publish:
