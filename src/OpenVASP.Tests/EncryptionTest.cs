@@ -3,8 +3,7 @@ using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using Nethereum.Hex.HexConvertors.Extensions;
 using Nethereum.Signer;
-using OpenVASP.CSharpClient.Cryptography;
-using OpenVASP.CSharpClient.Utils;
+using OpenVASP.CSharpClient.Internals.Cryptography;
 using Org.BouncyCastle.Math;
 using Xunit;
 using Xunit.Abstractions;
@@ -13,13 +12,6 @@ namespace OpenVASP.Tests
 {
     public class EncryptionTest
     {
-        private readonly ITestOutputHelper testOutputHelper;
-
-        public EncryptionTest(ITestOutputHelper testOutputHelper)
-        {
-            this.testOutputHelper = testOutputHelper;
-        }
-
         [Fact]
         public void SharedSecretGenerationTest()
         {
@@ -30,9 +22,6 @@ namespace OpenVASP.Tests
             var shared2 = bob.GenerateSharedSecretHex(alice.PublicKey);
 
             Assert.Equal(shared1, shared2);
-
-            testOutputHelper.WriteLine(shared1);
-            testOutputHelper.WriteLine(shared2);
         }
 
         [Fact]
@@ -43,16 +32,10 @@ namespace OpenVASP.Tests
             X25519Key alice = X25519Key.ImportKey(ecKey1.GetPrivateKey());
             X25519Key bob = X25519Key.ImportKey(ecKey2.GetPrivateKey());
 
-            var s1 = alice.GenerateSharedSecretHex(ecKey2.GetPubKey().ToHex(true));
-            var s2 = bob.GenerateSharedSecretHex(ecKey1.GetPubKey().ToHex(true));
-
             var shared1 = alice.GenerateSharedSecretHex(bob.PublicKey);
             var shared2 = bob.GenerateSharedSecretHex(alice.PublicKey);
 
             Assert.Equal(shared1, shared2);
-
-            testOutputHelper.WriteLine(shared1);
-            testOutputHelper.WriteLine(shared2);
         }
 
         [Fact]
@@ -65,9 +48,6 @@ namespace OpenVASP.Tests
             var shared2 = bob.GenerateSharedSecretHex(alice.PublicKey);
 
             Assert.Equal(shared1, shared2);
-
-            testOutputHelper.WriteLine(shared1);
-            testOutputHelper.WriteLine(shared2);
         }
 
         [Fact]
@@ -78,13 +58,7 @@ namespace OpenVASP.Tests
 
             Assert.Equal(alice.PrivateKey, importValid.PrivateKey);
             Assert.Equal(alice.PublicKey, importValid.PublicKey);
-
-            testOutputHelper.WriteLine(alice.PrivateKey.HexToByteArray().Length.ToString());
-
-            testOutputHelper.WriteLine(alice.PrivateKey);
-            testOutputHelper.WriteLine(alice.PublicKey);
         }
-
 
         [Fact]
         public void SharedSecretECDHImportTest()
@@ -95,19 +69,13 @@ namespace OpenVASP.Tests
             ECDH_Key alice = ECDH_Key.ImportKey(ecKey1.GetPrivateKey());
             ECDH_Key bob = ECDH_Key.ImportKey(ecKey2.GetPrivateKey());
 
-            var ecPubKey1 = $"0x{ecKey1.GetPubKey().ToHex().Substring(2)}";
-            var ecPubKey2 = $"0x{ecKey2.GetPubKey().ToHex().Substring(2)}";
-
-            Assert.Equal(ecPubKey1, alice.PublicKey);
-            Assert.Equal(ecPubKey2, bob.PublicKey);
+            var ecPubKey1 = ecKey1.GetPubKey().ToHex(true);
+            var ecPubKey2 = ecKey2.GetPubKey().ToHex(true);
 
             var shared1 = alice.GenerateSharedSecretHex(bob.PublicKey);
             var shared2 = bob.GenerateSharedSecretHex(alice.PublicKey);
 
             Assert.Equal(shared1, shared2);
-
-            testOutputHelper.WriteLine(shared1);
-            testOutputHelper.WriteLine(shared2);
         }
 
         [Theory]
@@ -121,8 +89,6 @@ namespace OpenVASP.Tests
             var shared1 = alice.GenerateSharedSecretHex(publicKeySecp256k1);
 
             Assert.Equal(sharedKey, shared1);
-
-            testOutputHelper.WriteLine(shared1);
         }
 
         //https://asecuritysite.com/encryption/ecdh2
@@ -150,18 +116,6 @@ namespace OpenVASP.Tests
 
             Assert.Equal(shared1, shared2);
             Assert.Equal(expectedSharedStr.Replace("L", ""), res);
-
-            testOutputHelper.WriteLine(shared1);
-            testOutputHelper.WriteLine(shared2);
-            testOutputHelper.WriteLine(res);
-
-            EthECKey aliceKeyEth = new EthECKey(aliceConverted);
-            EthECKey bobKeyEth = new EthECKey($"0x04{bob.PublicKey.Substring(2)}".HexToByteArray(), false);
-
-            var shared3 = aliceKeyEth.CalculateCommonSecret(bobKeyEth).ToHex(true);
-            testOutputHelper.WriteLine(shared3);
-
-            Assert.Equal(shared1, shared3);
         }
     }
 }

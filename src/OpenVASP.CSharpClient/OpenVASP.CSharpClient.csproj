@@ -2,41 +2,17 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <PackageId>test</PackageId>
-    <Version>0.0.1-alpha.5</Version>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Nethereum.Web3" Version="3.5.0" />
+    <PackageReference Include="Nethereum.ABI" Version="3.8.0" />
+    <PackageReference Include="Nethereum.Contracts" Version="3.8.0" />
+    <PackageReference Include="Nethereum.Hex" Version="3.8.0" />
+    <PackageReference Include="Nethereum.RLP" Version="3.8.0" />
+    <PackageReference Include="Nethereum.Web3" Version="3.8.0" />
     <PackageReference Include="Portable.BouncyCastle" Version="1.8.5.2" />
-    <PackageReference Include="System.Threading.Channels" Version="4.7.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="2.0.0" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="VASP.abi">
-      <PackageCopyToOutput>true</PackageCopyToOutput>
-    </Content>
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\OpenVASP.Messaging\OpenVASP.Messaging.csproj" PrivateAssets="All" />
-  </ItemGroup>
-
-  <!--
-    The following solves the problem that 'dotnet pack' does not include the DLLs from referenced projects.
-    See https://github.com/NuGet/Home/issues/3891 for a description of the problem
-    and for newer versions / workarounds / built-in methods.
-  -->
-  <PropertyGroup>
-    <TargetsForTfmSpecificBuildOutput>
-      $(TargetsForTfmSpecificBuildOutput);PackReferencedProjectOutputs
-    </TargetsForTfmSpecificBuildOutput>
-  </PropertyGroup>
-
-  <Target Name="PackReferencedProjectOutputs" DependsOnTargets="BuildOnlySettings;ResolveReferences">
-    <ItemGroup>
-      <BuildOutputInPackage Include="@(ReferenceCopyLocalPaths-&gt;WithMetadataValue('ReferenceSourceTarget', 'ProjectReference'))" />
-    </ItemGroup>
-  </Target>
 
 </Project>
