@@ -10,6 +10,9 @@ using Xunit;
 
 namespace OpenVASP.Tests
 {
+    /// <summary>
+    /// In order to run given tests, populate whisperRpcUrl and ethereumRpcUrl variables in ctor and uncomment [Fact]
+    /// </summary>
     public class ClientExampleTest
     {
         private readonly VaspClientSettings _settings1;
@@ -17,8 +20,8 @@ namespace OpenVASP.Tests
 
         public ClientExampleTest()
         {
-            var whisperRpcUrl = "http://10.0.147.215:8545";
-            var ethereumRpcUrl = "https://ropsten.infura.io/v3/fb49e892176d413d85f993d0352a0971";
+            var whisperRpcUrl = string.Empty;
+            var ethereumRpcUrl = string.Empty;
             var indexSmartContractAddress = "0x4988a15D3CA2AEBd2Dfd02629E759492E6e29BfE";
             
             _settings1 = new VaspClientSettings
@@ -50,7 +53,7 @@ namespace OpenVASP.Tests
             };
         }
 
-        [Fact]
+        //[Fact]
         public async Task ConnectionBetweenTwoClientsSuccessful()
         {
             var vaspClient1 = VaspClient.Create(_settings1);
